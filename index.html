@@ -1,35 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name=viewport content="width=device-width,initial-scale=1">
-  <meta charset="utf-8">
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-  </script>
-  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-  <script src="https://www.geogebra.org/apps/deployggb.js"></script>
-  <title>Test1</title>
+    <meta name=viewport content="width=device-width,initial-scale=1">
+    <meta charset="utf-8">
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+    </script>
+    <script src="https://www.geogebra.org/apps/deployggb.js"></script>
+    <title>Test1</title>
 
 </head>
 <body>
     <div id="ggb-element"></div>
     <div>
-      $x=\frac{1}{2y}$
-      Test2
+        $x=\frac{1}{2y}$
+        Test2
     </div>
     <script>
-      var params = {
-              "appName": "graphing", 
-              "width": 800, 
-              "height": 600, 
-              "showToolBar": false, 
-              "showAlgebraInput": false, 
-              "showMenuBar": false
-              };
-      var ggbApplet = new GGBApplet(params, true);
-      window.addEventListener("load", function() { 
-          ggbApplet.inject('ggb-element');
-      });
+        var params = {
+                "appName": "geometry",
+                "width": 800,
+                "height": 600,
+                "showToolBar": false,
+                "showAlgebraInput": false,
+                "enableLabelDrags":false,
+                "showToolBarHelp":false,
+                "useBrowserForJS":false,
+                "showMenuBar": false,
+				"material_id":"fwz3d6c3"
+                };
+        var ggbApplet = new GGBApplet(params, true);
+        window.addEventListener("load", function() {
+
+            ggbApplet.inject('ggb-element');
+            ggbApplet.evalCommand("A=Point({0,0})");
+        });
     </script>
 </body>
 </html>
