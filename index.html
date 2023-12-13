@@ -3,7 +3,7 @@
 <head>
     <meta name=viewport content="width=device-width,initial-scale=1">
     <meta charset="utf-8">
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
     </script>
@@ -18,6 +18,9 @@
         Test2
     </div>
     <script>
+    function appletOnLoad(app) {
+        app.evalCommand("SetPerspective(\"G\")\nA=(0,0)\nB=(1,1)\nc=Circle(A,B)");
+    }
         var params = {
                 "appName": "geometry",
                 "width": 800,
@@ -28,13 +31,13 @@
                 "showToolBarHelp":false,
                 "useBrowserForJS":false,
                 "showMenuBar": false,
-				"material_id":"fwz3d6c3"
+                //"showResetIcon": true, //registerClearListener(String JSFunctionName)
+                "appletOnLoad": appletOnLoad
                 };
         var ggbApplet = new GGBApplet(params, true);
         window.addEventListener("load", function() {
-
             ggbApplet.inject('ggb-element');
-            ggbApplet.evalCommand("A=Point({0,0})");
+
         });
     </script>
 </body>
