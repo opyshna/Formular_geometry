@@ -15,12 +15,22 @@
     <div id="ggb-element"></div>
     <div>
         $x=\frac{1}{2y}$<br>
-        Test2
+        Test2<br>
+        <buttton onclick="nextGG()">NEXT</buttton>
     </div>
     <script>
-    function appletOnLoad(app) {
-        app.evalCommand("SetPerspective(\"G\")\nA=(0,0)\nB=(1,1)\nc=Circle(A,B)");
-    }
+        GGapp = undefined;
+        cc = 0;
+        commandList = ["\nA=(0,0)\nB=(1,1)", "c=Circle(A,B)", "l=Line(A,B)"];
+        function nextGG() {
+            if (commandList.size == cc) return;
+            GGapp.evalCommand(commandList[cc]);
+            cc += 1;
+        }
+        function appletOnLoad(app) {
+            GGapp = app;
+            app.evalCommand("SetPerspective(\"G\")");
+        }
         var params = {
                 "appName": "geometry",
                 "width": 800,
