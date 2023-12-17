@@ -16,12 +16,12 @@
     <div>
         $x=\frac{1}{2y}$<br>
         Test2<br>
-        <buttton onclick="nextGG()">NEXT</buttton>
+        <buttton onclick="nextGG()" style="background-color: yellow; cursor: pointer;">[NEXT]</buttton>
     </div>
     <script>
         GGapp = undefined;
         cc = 0;
-        commandList = ["\nA=(0,0)\nB=(1,1)", "c=Circle(A,B)", "l=Line(A,B)"];
+        commandList = ["A=(0,0)\nB=(1,1)", "c=Circle(A,B)", "l=Line(A,B)"];
         function nextGG() {
             if (commandList.size == cc) return;
             GGapp.evalCommand(commandList[cc]);
