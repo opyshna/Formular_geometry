@@ -8,15 +8,17 @@
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
     </script>
     <script src="https://www.geogebra.org/apps/deployggb.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.23/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Test1</title>
 
 </head>
 <body>
-    <div id="ggb-element"></div>
+    <div id="ggb-element"><span class="loading loading-spinner loading-lg"></span></div>
     <div>
         $x=\frac{1}{2y}$<br>
         Test2<br>
-        <buttton onclick="nextGG()" style="background-color: yellow; cursor: pointer;">[NEXT]</buttton>
+        <buttton onclick="nextGG()" class="btn">[NEXT]</buttton>
     </div>
     <script>
         GGapp = undefined;
