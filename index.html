@@ -10,47 +10,109 @@
     <script src="https://www.geogebra.org/apps/deployggb.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.23/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html, body {
+            display: flex;
+            flex-flow: column;
+            height: 100%;
+            width:100%;
+        }
+        .full_width {
+            flex: 1 1 auto;
+            display: flex;
+        }
+        .half_width {
+            height:100%;
+            width:50%;
+        }
+        :has(>.loading) {
+            display: flex;
+            align-content: center;
+            justify-content: center;
+            align-items: center;
+        }
+        #solution-steps {
+            display: flex;
+            flex-flow: column;
+            width:100%;
+        }
+        .solution_step {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+    </style>
     <title>Test1</title>
 
 </head>
 <body>
-    <div id="ggb-element"><span class="loading loading-spinner loading-lg"></span></div>
-    <div>
-        $x=\frac{1}{2y}$<br>
-        Test2<br>
-        <buttton onclick="nextGG()" class="btn">[NEXT]</buttton>
-    </div>
-    <script>
-        GGapp = undefined;
-        cc = 0;
-        commandList = ["A=(0,0)\nB=(1,1)", "c=Circle(A,B)", "l=Line(A,B)"];
-        function nextGG() {
-            if (commandList.size == cc) return;
-            GGapp.evalCommand(commandList[cc]);
-            cc += 1;
-        }
-        function appletOnLoad(app) {
-            GGapp = app;
-            app.evalCommand("SetPerspective(\"G\")");
-        }
-        var params = {
-                "appName": "geometry",
-                "width": 800,
-                "height": 600,
-                "showToolBar": false,
-                "showAlgebraInput": false,
-                "enableLabelDrags":false,
-                "showToolBarHelp":false,
-                "useBrowserForJS":false,
-                "showMenuBar": false,
-                //"showResetIcon": true, //registerClearListener(String JSFunctionName)
-                "appletOnLoad": appletOnLoad
-                };
-        var ggbApplet = new GGBApplet(params, true);
-        window.addEventListener("load", function() {
-            ggbApplet.inject('ggb-element');
+    <div class="full_width">
+        <div class="half_width">
+            <div id="solution-steps">
+                <div>Solution:</div>
+                <div class="solution_step">$x=\frac{1}{2y}$</div>
+                <div class="solution_step">Test2</div>
+                <div class="solution_step">Test3</div>
+                <div class="join">
+                    <buttton onclick="prevGG()" class="btn join-item">PREV</buttton>
+                    <buttton onclick="nextGG()" class="btn join-item">NEXT</buttton>
+                </div>
+            </div>
+        </div>
 
-        });
-    </script>
+        <div class="half_width" id="ggb-element"><span class="loading loading-spinner loading-lg"></span></div>
+
+
+        <script>
+            /*function fixGGB() {
+                document.getElementsByClassName("ggbTransform")[0].style.transform='';
+                document.getElementById("ggb-element").style.width="";
+                document.getElementById("ggb-element").style.height="";
+                GGapp.setWidth(document.getElementById("ggb-element").offsetWidth);
+                GGapp.setHeight(document.getElementById("ggb-element").offsetHeight);
+            }
+            window.addEventListener("resize", fixGGB);*/
+            GGapp = undefined;
+            cc = 0;
+            initialCommand = "A=(0,0)\nB=(1,1)\nc=Circle(A,B)\nl=Line(A,B)";
+            objList = [["A","B"], ["c"], ["l"]];
+            function nextGG() {
+                if (objList.length <= cc) return;
+                for (obj of objList[cc]) GGapp.setVisible(obj, true);
+                document.getElementsByClassName("solution_step")[cc].style.maxHeight="35px";
+                cc += 1;
+            }
+            function prevGG() {
+                if (cc <= 0) return;
+                cc -= 1;
+                for (obj of objList[cc]) GGapp.setVisible(obj, false);
+                document.getElementsByClassName("solution_step")[cc].style.maxHeight="0";
+            }
+            function appletOnLoad(app) {
+                GGapp = app;
+                app.evalCommand("SetPerspective(\"G\")");
+                app.evalCommand(initialCommand);
+                for (objs of objList) for (obj of objs) app.setVisible(obj, false);
+            }
+            var params = {
+                    "appName": "geometry",
+                    //"width": 600,//document.getElementById("ggb-element").offsetWidth,
+                    "allowUpscale": true,
+                    "autoHeight": true,
+                    "showToolBar": false,
+                    "showAlgebraInput": false,
+                    "enableLabelDrags":false,
+                    "showToolBarHelp":false,
+                    "useBrowserForJS":false,
+                    "showMenuBar": false,
+                    //"showResetIcon": true, //registerClearListener(String JSFunctionName)
+                    "appletOnLoad": appletOnLoad
+                    };
+            var ggbApplet = new GGBApplet(params, true);
+            window.addEventListener("load", function() {
+                ggbApplet.inject('ggb-element');
+            });
+        </script>
+    </div>
 </body>
 </html>
