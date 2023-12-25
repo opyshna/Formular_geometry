@@ -175,7 +175,7 @@
             window.addEventListener("mousemove", (event)=>ssMouseMove(event.clientY, event.buttons & 1));
             window.addEventListener("mouseup", ssMouseUp);
             document.body.addEventListener("touchstart", ()=>{})
-            window.addEventListener("touchmove", (event)=>ssMouseMove(event.clientY, true));
+            window.addEventListener("touchmove", (event)=>ssMouseMove(event.touches[0].clientY, true));
             window.addEventListener("touchend", ssMouseUp);
             window.addEventListener("touchcancel", ssMouseUp);
             function appletOnClear() {
