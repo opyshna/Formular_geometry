@@ -247,7 +247,7 @@
                 GGapp = app;
                 app.evalCommand("SetPerspective(\"G\")");
                 document.getElementById("ggb-loading").style.display="none";
-                if (document.getElementById("solution-steps")) stepsOnLoad();
+                if (!stepsLoaded && document.getElementById("solution-steps")) stepsOnLoad();
                 problemOnLoad();
             }
             var params = {
