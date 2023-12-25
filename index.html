@@ -31,15 +31,14 @@
             justify-content: center;
             align-items: center;
         }
-        #solution-steps {
+        .flex_down {
             display: flex;
             flex-flow: column;
             width:100%;
         }
-        .solution_step {
-            max-height: 0;
+        #solution-steps{
             overflow: hidden;
-            transition: max-height 0.3s ease;
+            max-height: 0;
         }
     </style>
     <title>Test1</title>
@@ -48,14 +47,19 @@
 <body>
     <div class="full_width">
         <div class="half_width">
-            <div id="solution-steps">
+            <div class="flex_down">
                 <div>Solution:</div>
-                <div class="solution_step">$x=\frac{1}{2y}$</div>
-                <div class="solution_step">Test2</div>
-                <div class="solution_step">Test3</div>
+                <div class="flex_down" id="solution-steps">
+                    <div>$x=\frac{1}{2y}$</div>
+                    <div>Test2</div>
+                    <div>Test3</div>
+                </div>
                 <div class="join">
                     <buttton onclick="prevGG()" class="btn join-item">PREV</buttton>
                     <buttton onclick="nextGG()" class="btn join-item">NEXT</buttton>
+                    <button class="btn btn-square join-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
                 </div>
             </div>
         </div>
@@ -76,17 +80,34 @@
             cc = 0;
             initialCommand = "A=(0,0)\nB=(1,1)\nc=Circle(A,B)\nl=Line(A,B)";
             objList = [["A","B"], ["c"], ["l"]];
+            animSpeed = 50; // px/s
+            function getStepsHeights() {
+                heights = [0];
+                steps = document.getElementById("solution-steps").children
+                for (var i = 0; i < steps.length; i++) heights.push(steps[i].offsetHeight + heights[i]);
+                return heights;
+            }
             function nextGG() {
-                if (objList.length <= cc) return;
+                if (!GGapp || objList.length <= cc) return;
                 for (obj of objList[cc]) GGapp.setVisible(obj, true);
-                document.getElementsByClassName("solution_step")[cc].style.maxHeight="35px";
+                ss = document.getElementById("solution-steps");
+                h = ss.offsetHeight;
+                h2 = getStepsHeights()[cc+1]
+                ss.style.transition = "max-height "+Math.abs(h2-h)/animSpeed+"s ease";
+                ss.offsetHeight;
+                ss.style.maxHeight = h2 + "px";
                 cc += 1;
             }
             function prevGG() {
-                if (cc <= 0) return;
+                if (!GGapp || cc <= 0) return;
                 cc -= 1;
                 for (obj of objList[cc]) GGapp.setVisible(obj, false);
-                document.getElementsByClassName("solution_step")[cc].style.maxHeight="0";
+                ss = document.getElementById("solution-steps");
+                h = ss.offsetHeight;
+                h2 = getStepsHeights()[cc]
+                ss.style.transition = "max-height "+Math.abs(h2-h)/animSpeed+"s ease";
+                ss.offsetHeight;
+                ss.style.maxHeight = h2 + "px";
             }
             function appletOnLoad(app) {
                 GGapp = app;
