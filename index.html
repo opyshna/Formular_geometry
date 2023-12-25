@@ -11,30 +11,47 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.23/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        html, body {
+        body {
             display: flex;
             flex-flow: column;
-            height: 100%;
-            width:100%;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
         }
         .full_width {
             flex: 1 1 auto;
             display: flex;
+            min-width: 0;
+            min-height: 0;
         }
         .half_width {
-            height:100%;
-            width:50%;
+            flex: 0 0 50%;
         }
-        :has(>.loading) {
-            display: flex;
-            align-content: center;
-            justify-content: center;
-            align-items: center;
+        @media (max-width: 100vh) {
+            .full_width {
+                flex-flow: column;
+            }
+            .explanation {
+                order: 2;
+            }
+        }
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
         .flex_down {
             display: flex;
             flex-flow: column;
-            width:100%;
+        }
+        .explanation {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            min-width: 0;
+            min-height: 0;
         }
         #solution-steps{
             overflow: hidden;
@@ -46,17 +63,17 @@
 </head>
 <body>
     <div class="full_width">
-        <div class="half_width">
+        <div class="half_width explanation">
             <div class="flex_down">
                 <div>Solution:</div>
                 <div class="flex_down" id="solution-steps">
                     <div>$x=\frac{1}{2y}$</div>
-                    <div>Test2</div>
+                    <div>Test2<br><br><br><br><br></div>
                     <div>Test3</div>
                 </div>
                 <div class="join">
                     <buttton onclick="prevGG()" class="btn join-item">PREV</buttton>
-                    <buttton onclick="nextGG()" class="btn join-item">NEXT</buttton>
+                    <buttton onclick="nextGG()" class="btn join-item" id="nextbtn"><div style="position: relative;"><div style="visibility: hidden;">NEXT</div><span class="loading loading-spinner loading-xs"></div></buttton>
                     <button class="btn btn-square join-item">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
@@ -64,23 +81,22 @@
             </div>
         </div>
 
-        <div class="half_width" id="ggb-element"><span class="loading loading-spinner loading-lg"></span></div>
+        <div class="half_width" id="ggb-wrapper"><div id="ggb-element"></div></div>
 
 
         <script>
-            /*function fixGGB() {
-                document.getElementsByClassName("ggbTransform")[0].style.transform='';
-                document.getElementById("ggb-element").style.width="";
-                document.getElementById("ggb-element").style.height="";
-                GGapp.setWidth(document.getElementById("ggb-element").offsetWidth);
-                GGapp.setHeight(document.getElementById("ggb-element").offsetHeight);
+            function fixGGB() {
+                document.getElementById("ggb-wrapper").style.overflow="hidden";
+                //document.getElementsByClassName("ggbTransform")[0].style.transform='';
+                GGapp.setWidth(document.getElementById("ggb-wrapper").offsetWidth);
+                GGapp.setHeight(document.getElementById("ggb-wrapper").offsetHeight);
             }
-            window.addEventListener("resize", fixGGB);*/
+            window.addEventListener("resize", ()=>window.setTimeout(fixGGB,0));
             GGapp = undefined;
             cc = 0;
             initialCommand = "A=(0,0)\nB=(1,1)\nc=Circle(A,B)\nl=Line(A,B)";
             objList = [["A","B"], ["c"], ["l"]];
-            animSpeed = 50; // px/s
+            animSpeed = 200; // px/s
             function getStepsHeights() {
                 heights = [0];
                 steps = document.getElementById("solution-steps").children
@@ -93,7 +109,7 @@
                 ss = document.getElementById("solution-steps");
                 h = ss.offsetHeight;
                 h2 = getStepsHeights()[cc+1]
-                ss.style.transition = "max-height "+Math.abs(h2-h)/animSpeed+"s ease";
+                ss.style.transition = "max-height "+Math.min(Math.abs(h2-h)/animSpeed, 1)+"s ease";
                 ss.offsetHeight;
                 ss.style.maxHeight = h2 + "px";
                 cc += 1;
@@ -105,7 +121,7 @@
                 ss = document.getElementById("solution-steps");
                 h = ss.offsetHeight;
                 h2 = getStepsHeights()[cc]
-                ss.style.transition = "max-height "+Math.abs(h2-h)/animSpeed+"s ease";
+                ss.style.transition = "max-height "+Math.min(Math.abs(h2-h)/animSpeed, 1)+"s ease";
                 ss.offsetHeight;
                 ss.style.maxHeight = h2 + "px";
             }
@@ -114,12 +130,12 @@
                 app.evalCommand("SetPerspective(\"G\")");
                 app.evalCommand(initialCommand);
                 for (objs of objList) for (obj of objs) app.setVisible(obj, false);
+                document.getElementById("nextbtn").innerHTML = "NEXT";
             }
             var params = {
                     "appName": "geometry",
-                    //"width": 600,//document.getElementById("ggb-element").offsetWidth,
-                    "allowUpscale": true,
-                    "autoHeight": true,
+                    "width": document.getElementById("ggb-wrapper").offsetWidth,
+                    "height": document.getElementById("ggb-wrapper").offsetHeight,
                     "showToolBar": false,
                     "showAlgebraInput": false,
                     "enableLabelDrags":false,
