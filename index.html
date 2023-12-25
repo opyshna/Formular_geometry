@@ -11,7 +11,7 @@
     <script src="https://www.geogebra.org/apps/deployggb.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.23/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/x-icon" href="/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="https://opyshna.github.io/Formular_geometry/favicon.svg">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
     <style>
         body {
@@ -49,10 +49,17 @@
             flex: 1 1 auto;
             overflow-y: auto;
         }
-        #solution-steps{
+        #solution-steps {
             overflow: hidden;
+            margin: 0;
             max-height: 0;
             transition: max-height 0.3s cubic-bezier(0.2, 1, 0.1, 1);
+        }
+        #task-container > div:not(.join, #solution-steps), #solution-steps > div {
+            padding: 10px;
+        }
+        #task-container > div > b {
+            margin-right: 5px;
         }
     </style>
 
@@ -61,12 +68,25 @@
     <div class="full_width">
         <div class="half_width explanation">
             <div class="flex-col" id="task-container">
-                <!--<div>Solution:</div>
-                <div class="flex-col" id="solution-steps" initial-command="A=(0,0)\nB=(1,1)\nc=Circle(A,B)\nl=Line(A,B)">
-                    <div objs="A B">$x=\frac{1}{2y}$</div>
-                    <div objs="c">Test2<br><br><br><br><br></div>
-                    <div objs="l">Test3</div>
+
+                <!--<div><b>Task:</b>reconstruct the triangle by points A, B and H</div>
+                <div class="flex"><b>Given:</b><div class="flex-col">
+                <div>$A,B$ - two vertices of the triangle</div>
+                <div>$H$ - point of intersection of heights of the triangle</div>
+                </div></div>
+                <div class="flex-col" id="solution-steps" task-name="ABH" initial-command=
+                "A=(2,1)\nB=(0,-1)\nH=(0,0)
+                AH=Ray(A,H)\nBH=Ray(B,H)
+                AB_1l=PerpendicularLine(A,BH)\nB_1=Intersect(AB_1l,BH)\nSetVisibleInView(AB_1l,1,False)\nAB_1=Ray(A,B_1)
+                BA_1l=PerpendicularLine(B,AH)\nA_1=Intersect(BA_1l,AH)\nSetVisibleInView(BA_1l,1,False)\nBA_1=Ray(B,A_1)
+                C=Intersect(AB_1l,BA_1l)
+                ABC=Polygon(A,B,C)">
+                <div objs="AH BH">1. $AH$ and $BH$</div>
+                <div objs="AB_1 BA_1 A_1 B_1">2. $AB_1⊥BH$ and $BA_1⊥AH$</div>
+                <div objs="C">3. $C=AB_1⋃BA_1$</div>
+                <div objs="ABC">4. $ΔABC$</div>
                 </div>-->
+
                 <div class="join">
                     <buttton onclick="prevGG()" class="btn join-item"><div class="ssLoading" style="position: relative;"><span style="visibility: hidden;">PREV</span><span class="loading loading-spinner loading-xs"></span></div></buttton>
                     <buttton onclick="nextGG()" class="btn join-item"><div class="ssLoading" style="position: relative;"><span style="visibility: hidden;" id="confetti-source">NEXT</span><span class="loading loading-spinner loading-xs"></span></div></buttton>
@@ -107,7 +127,7 @@
             }
             window.addEventListener("resize", fixGGB);
             GGapp = undefined;
-            stepsLoaded = true;
+            stepsLoaded = false;
             confettiLaunched = false;
             cc = 0;
             animSpeed = 200; // px/s
@@ -211,6 +231,7 @@
                     el.children[0].style.visibility="";
                     el.children[1].style.display="none";
                 }
+                stepsLoaded = true;
                 problemOnLoad();
             }
             function appletOnClear() {
@@ -226,6 +247,7 @@
                 GGapp = app;
                 app.evalCommand("SetPerspective(\"G\")");
                 document.getElementById("ggb-loading").style.display="none";
+                if (document.getElementById("solution-steps")) stepsOnLoad();
                 problemOnLoad();
             }
             var params = {
