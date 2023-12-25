@@ -60,7 +60,7 @@
 <body>
     <div class="full_width">
         <div class="half_width explanation">
-            <div class="flex-col" id="task-container" onload="loadSteps();">
+            <div class="flex-col" id="task-container">
                 <!--<div>Solution:</div>
                 <div class="flex-col" id="solution-steps" initial-command="A=(0,0)\nB=(1,1)\nc=Circle(A,B)\nl=Line(A,B)">
                     <div objs="A B">$x=\frac{1}{2y}$</div>
@@ -204,6 +204,7 @@
                 sc.insertBefore(ifrm, sc.firstChild);
             }
             function stepsOnLoad() {
+                MathJax.Hub.Typeset()
                 title = document.getElementById("title");
                 title.innerHTML = document.getElementById("solution-steps").getAttribute("task-name") + " - " + title.innerHTML;
                 for (el of document.getElementsByClassName("ssLoading")) {
@@ -241,6 +242,7 @@
                     };
             var ggbApplet = new GGBApplet(params, true);
             window.addEventListener("load", function() {
+                loadSteps();
                 ggbApplet.inject('ggb-element');
             });
         </script>
