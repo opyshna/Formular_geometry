@@ -3,6 +3,7 @@
 <head>
     <meta name=viewport content="width=device-width,initial-scale=1">
     <meta charset="utf-8">
+    <title id="title">Formular Geometry</title>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
@@ -10,6 +11,8 @@
     <script src="https://www.geogebra.org/apps/deployggb.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.23/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/x-icon" href="/favicon.svg">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
     <style>
         body {
             display: flex;
@@ -52,22 +55,21 @@
             transition: max-height 0.3s cubic-bezier(0.2, 1, 0.1, 1);
         }
     </style>
-    <title>Test1</title>
 
 </head>
 <body>
     <div class="full_width">
         <div class="half_width explanation">
-            <div class="flex-col">
-                <div>Solution:</div>
+            <div class="flex-col" id="task-container" onload="loadSteps();">
+                <!--<div>Solution:</div>
                 <div class="flex-col" id="solution-steps" initial-command="A=(0,0)\nB=(1,1)\nc=Circle(A,B)\nl=Line(A,B)">
                     <div objs="A B">$x=\frac{1}{2y}$</div>
                     <div objs="c">Test2<br><br><br><br><br></div>
                     <div objs="l">Test3</div>
-                </div>
+                </div>-->
                 <div class="join">
-                    <buttton onclick="prevGG()" class="btn join-item">PREV</buttton>
-                    <buttton onclick="nextGG()" class="btn join-item" id="nextbtn"><div style="position: relative;"><div style="visibility: hidden;">NEXT</div><span class="loading loading-spinner loading-xs"></div></buttton>
+                    <buttton onclick="prevGG()" class="btn join-item"><div class="ssLoading" style="position: relative;"><span style="visibility: hidden;">PREV</span><span class="loading loading-spinner loading-xs"></span></div></buttton>
+                    <buttton onclick="nextGG()" class="btn join-item"><div class="ssLoading" style="position: relative;"><span style="visibility: hidden;" id="confetti-source">NEXT</span><span class="loading loading-spinner loading-xs"></span></div></buttton>
                     <button class="btn btn-square join-item" onmousedown="ssMouseDown(event.clientY)" ontouchstart="ssMouseDown(event.touches[0].clientY)" style="touch-action:none;">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
@@ -84,6 +86,7 @@
         <div class="half_width" id="ggb-wrapper">
             <div style="position:relative;width:fit-content;height:fit-content;">
                 <div id="ggb-element"></div>
+                <span class="loading loading-spinner loading-lg" id="ggb-loading"></span>
                 <button class="btn btn-square" onclick="appletOnClear()" fill="none" style="position:absolute;top:1px;right:1px">
                     <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-5 h-5 stroke-current" viewBox="0 0 30 30">
                         <path d="M 15 3 C 12.053086 3 9.3294211 4.0897803 7.2558594 5.8359375 A 1.0001 1.0001 0 1 0 8.5449219 7.3652344 C 10.27136 5.9113916 12.546914 5 15 5 C 20.226608 5 24.456683 8.9136179 24.951172 14 L 22 14 L 26 20 L 30 14 L 26.949219 14 C 26.441216 7.8348596 21.297943 3 15 3 z M 4.3007812 9 L 0.30078125 15 L 3 15 C 3 21.635519 8.3644809 27 15 27 C 17.946914 27 20.670579 25.91022 22.744141 24.164062 A 1.0001 1.0001 0 1 0 21.455078 22.634766 C 19.72864 24.088608 17.453086 25 15 25 C 9.4355191 25 5 20.564481 5 15 L 8.3007812 15 L 4.3007812 9 z"></path>
@@ -95,6 +98,7 @@
 
         <script>
             function fixGGB() {
+                if (!GGapp) return;
                 document.getElementById("ggb-wrapper").style.overflow="hidden";
                 //document.getElementsByClassName("ggbTransform")[0].style.transform='';
                 GGapp.setWidth(document.getElementById("ggb-wrapper").offsetWidth);
@@ -103,6 +107,8 @@
             }
             window.addEventListener("resize", fixGGB);
             GGapp = undefined;
+            stepsLoaded = true;
+            confettiLaunched = false;
             cc = 0;
             animSpeed = 200; // px/s
             function getStepsHeights() {
@@ -111,30 +117,39 @@
                 for (var i = 0; i < steps.length; i++) heights.push(steps[i].offsetHeight + heights[i]);
                 return heights;
             }
+            function getConfetti() {
+                if (confettiLaunched) return;
+                rect = document.getElementById("confetti-source").getBoundingClientRect();
+                confetti({
+                        // https://github.com/catdad/canvas-confetti?tab=readme-ov-file#options
+                                particleCount: 20,
+                                startVelocity: 20,
+                                ticks: 50,
+                                origin: {x:(rect.x+rect.width/2)/window.innerWidth, y:(rect.y+rect.height/2)/window.innerHeight},
+                                disableForReducedMotion: true
+                });
+                confettiLaunched = true;
+            }
             function nextGG() {
                 ss = document.getElementById("solution-steps");
-                if (!GGapp || ss.children.length <= cc) return;
-                for (obj of ss.children[cc].getAttribute("objs").split(" ")) GGapp.setVisible(obj, true);
-                h = ss.offsetHeight;
+                if (!stepsLoaded || ss.children.length <= cc) return;
+                if (GGapp) for (obj of ss.children[cc].getAttribute("objs").split(" ")) GGapp.setVisible(obj, true);
                 h2 = getStepsHeights()[cc+1];
-                //ss.style.transition = "max-height 0.3s cubic-bezier(0.2, 1, 0.1, 1)"//"max-height "+Math.min(Math.abs(h2-h)/animSpeed, 1)+"s ease";
-                //ss.offsetHeight;
                 ss.style.maxHeight = h2 + "px";
                 cc += 1;
+                if (cc == ss.children.length) getConfetti();
             }
             function prevGG() {
-                if (!GGapp || cc <= 0) return;
+                if (!stepsLoaded || cc <= 0) return;
                 cc -= 1;
                 ss = document.getElementById("solution-steps");
-                for (obj of ss.children[cc].getAttribute("objs").split(" ")) GGapp.setVisible(obj, false);
-                h = ss.offsetHeight;
+                if (GGapp) for (obj of ss.children[cc].getAttribute("objs").split(" ")) GGapp.setVisible(obj, false);
                 h2 = getStepsHeights()[cc];
-                //ss.style.transition = "max-height 0.3s cubic-bezier(0.2, 1, 0.1, 1)"//"max-height "+Math.min(Math.abs(h2-h)/animSpeed, 1)+"s ease";
-                //ss.offsetHeight;
                 ss.style.maxHeight = h2 + "px";
             }
             ssMove = {}
             function ssMouseDown(y) {
+                if (!stepsLoaded) return;
                 ssMove.heights = getStepsHeights();
                 ss = document.getElementById("solution-steps");
                 h0 = ss.offsetHeight;
@@ -145,7 +160,7 @@
                 ssMove.moving = true;
             }
             function ssMouseMove(y, bl) {
-                if (!ssMove.moving) return;
+                if (!stepsLoaded || !ssMove.moving) return;
                 if (!bl) {
                     ssMouseUp();
                     return;
@@ -158,15 +173,16 @@
                 for (var i = 0; i < ss.children.length; i++) {
                     mid = (heights[i]+heights[i+1])/2;
                     shouldShow = h1>mid;
-                    for (obj of ss.children[i].getAttribute("objs").split(" ")) GGapp.setVisible(obj, shouldShow);
+                    if (GGapp) for (obj of ss.children[i].getAttribute("objs").split(" ")) GGapp.setVisible(obj, shouldShow);
                     if (shouldShow) cc1 = i+1;
                 }
                 cc = cc1;
+                if (cc == ss.children.length) getConfetti();
             }
             function ssMouseUp() {
-                if (!ssMove.moving) return;
+                if (!stepsLoaded || !ssMove.moving) return;
                 ss = document.getElementById("solution-steps");
-                ss.style.transition = "max-height 0.3s cubic-bezier(0.2, 1, 0.1, 1)";
+                ss.style.transition = "";
                 h0 = ss.offsetHeight;
                 h2 = getStepsHeights()[cc];
                 ss.style.maxHeight = h2 + "px";
@@ -178,15 +194,38 @@
             window.addEventListener("touchmove", (event)=>ssMouseMove(event.touches[0].clientY, true));
             window.addEventListener("touchend", ssMouseUp);
             window.addEventListener("touchcancel", ssMouseUp);
+            function loadSteps() {
+                sc = document.getElementById("task-container");
+                ifrm = document.createElement("iframe");
+                ifrm.setAttribute("onload", "this.insertAdjacentHTML('afterend', (this.contentDocument.body||this.contentDocument).innerHTML);this.remove();stepsOnLoad();");
+                url = new URL(window.location.href);
+                ifrm.setAttribute("src", url.searchParams.get("task"));
+                ifrm.style.display = "none";
+                sc.insertBefore(ifrm, sc.firstChild);
+            }
+            function stepsOnLoad() {
+                title = document.getElementById("title");
+                title.innerHTML = document.getElementById("solution-steps").getAttribute("task-name") + " - " + title.innerHTML;
+                for (el of document.getElementsByClassName("ssLoading")) {
+                    el.children[0].style.visibility="";
+                    el.children[1].style.display="none";
+                }
+                problemOnLoad();
+            }
             function appletOnClear() {
-                GGapp.evalCommand(document.getElementById("solution-steps").getAttribute("initial-command").replaceAll("\\n", "\n"));
+                if (GGapp && stepsLoaded) GGapp.evalCommand(document.getElementById("solution-steps").getAttribute("initial-command").replaceAll("\\n", "\n"));
+            }
+            function problemOnLoad() {
+                if (!stepsLoaded || !GGapp) return;
+                ss = document.getElementById("solution-steps");
+                GGapp.evalCommand(ss.getAttribute("initial-command").replaceAll("\\n", "\n"));
+                for (var i = cc; i < ss.children.length; i++) for (obj of ss.children[i].getAttribute("objs").split(" ")) GGapp.setVisible(obj, false);
             }
             function appletOnLoad(app) {
                 GGapp = app;
                 app.evalCommand("SetPerspective(\"G\")");
-                app.evalCommand(document.getElementById("solution-steps").getAttribute("initial-command").replaceAll("\\n", "\n"));
-                for (step of document.getElementById("solution-steps").children) for (obj of step.getAttribute("objs").split(" ")) app.setVisible(obj, false);
-                document.getElementById("nextbtn").innerHTML = "NEXT";
+                document.getElementById("ggb-loading").style.display="none";
+                problemOnLoad();
             }
             var params = {
                     "appName": "geometry",
