@@ -68,7 +68,7 @@
                 <div class="join">
                     <buttton onclick="prevGG()" class="btn join-item">PREV</buttton>
                     <buttton onclick="nextGG()" class="btn join-item" id="nextbtn"><div style="position: relative;"><div style="visibility: hidden;">NEXT</div><span class="loading loading-spinner loading-xs"></div></buttton>
-                    <button class="btn btn-square join-item" onmousedown="ssMouseDown(event.clientY)" ontouchstart="ssMouseDown(event.touches[0].clientY)">
+                    <button class="btn btn-square join-item" onmousedown="ssMouseDown(event.clientY)" ontouchstart="ssMouseDown(event.touches[0].clientY)" style="touch-action:none;">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
                 </div>
@@ -174,6 +174,7 @@
             }
             window.addEventListener("mousemove", (event)=>ssMouseMove(event.clientY, event.buttons & 1));
             window.addEventListener("mouseup", ssMouseUp);
+            document.body.addEventListener("touchstart", ()=>{})
             window.addEventListener("touchmove", (event)=>ssMouseMove(event.clientY, true));
             window.addEventListener("touchend", ssMouseUp);
             window.addEventListener("touchcancel", ssMouseUp);
