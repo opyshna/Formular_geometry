@@ -281,7 +281,7 @@
             window.addEventListener("touchmove", (event)=>ssMouseMove(event.touches[0].clientY, true));
             window.addEventListener("touchend", ssMouseUp);
             window.addEventListener("touchcancel", ssMouseUp);
-            loadedSteps = null;
+            loadedSteps = [];
             function loadSteps() {
                 url = new URL(window.location.href);
                 task = url.searchParams.get("task");
@@ -300,13 +300,17 @@
                 }
             }
             function stepsOnLoadIfrm(ifrm) {
-                if (loadedSteps) {
-                    loadedSteps.remove();
+                if (loadedSteps.length) {
+                    for (el of loadedSteps) el.remove();
                     if (GGapp) GGapp.reset();
                 }
-                loadedSteps = document.createDocumentFragment();
-                loadedSteps.innerHTML = (ifrm.contentDocument.body||ifrm.contentDocument).innerHTML;
-                insertChildAtIndex(ifrm.parentElement, loadedSteps, 0);
+                sc = document.getElementById("task-container");
+                div = document.createElement('div');
+                div.innerHTML = (ifrm.contentDocument.body||ifrm.contentDocument).innerHTML;
+                for (var i = 0; i < div.children.length; i++) {
+                    insertChildAtIndex(sc, div.children[i], i);
+                    loadedSteps.push(div.children[i]);
+                }
                 ifrm.remove();
                 stepsOnLoad();
             }
