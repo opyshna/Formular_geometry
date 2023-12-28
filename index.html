@@ -305,7 +305,7 @@
                     if (GGapp) GGapp.reset();
                 }
                 loadedSteps = document.createDocumentFragment();
-                loadedSteps.insertAdjacentHTML('afterbegin', (ifrm.contentDocument.body||ifrm.contentDocument).innerHTML);
+                loadedSteps.innerHTML = (ifrm.contentDocument.body||ifrm.contentDocument).innerHTML;
                 insertChildAtIndex(ifrm.parent, loadedSteps, 0);
                 ifrm.remove();
                 stepsOnLoad();
