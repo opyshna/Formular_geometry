@@ -61,6 +61,20 @@
             padding-left: 2px;
             padding-bottom: 2px;
         }
+        .sidebar-menu-rating {
+            position: absolute;
+            right: .75rem;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+        }
+        .sidebar-menu-rating > div {
+            --tw-bg-opacity: 1;
+            background-color: rgb(251 146 60/var(--tw-bg-opacity));
+            height: 1rem;
+            width: 1rem;
+        }
         #task-container > div:not(.join, #solution-steps), #solution-steps > div {
             padding: 10px;
         }
@@ -68,7 +82,26 @@
             margin-right: 5px;
         }
     </style>
-
+    <script>
+        {
+        var defaultMenuItem = {
+            name: "_error_",
+            link: "",
+            difficulty: -1,
+            image: ""
+        };
+        let ABH = {
+            name: "ABH",
+            link: "/?task=ABH",
+            difficulty: 1,
+            image: "/ABH.svg"
+        };
+        var menuList = [ABH];
+        var menuTree = [
+            {catName:"Triangle reconstruction", items:[ABH]}
+        ];
+        }
+    </script>
 </head>
 <body>
 <div class="drawer flex flex-1">
@@ -294,11 +327,61 @@
                     "appletOnLoad": appletOnLoad
                     };
             var ggbApplet = new GGBApplet(params, true);
+            function insertChildAtIndex(parent, child, index) {
+                if (!index) index = 0;
+                if (index >= parent.children.length) {
+                    parent.appendChild(child);
+                } else {
+                    parent.insertBefore(child, parent.children[index]);
+                }
+            }
+            function makeSidebarMenu() {
+                sm = document.getElementById("sidebar-menu");
+                function addMenuItemsTo(el, items) {
+                    c = 0;
+                    for (it of items) {
+                        li = document.createElement("li");
+                        insertChildAtIndex(el, li, c);
+                        c += 1;
+                        if (it.catName) {
+                            det = document.createElement("details");
+                            det.open = true;
+                            sum = document.createElement("summary");
+                            sum.innerHTML = it.catName;
+                            ul = document.createElement("ul");
+                            det.appendChild(sum);
+                            det.appendChild(ul);
+                            li.appendChild(det);
+                            addMenuItemsTo(ul, it.items);
+                        } else {
+                            a = document.createElement("a");
+                            a.innerHTML = it.name;
+                            a.href = it.link;
+                            a.style.position="relative";
+                            rating = document.createElement("div");
+                            rating.classList.add("sidebar-menu-rating");
+                            for (var i = 0; i < 5; i++) {
+                                star = document.createElement("div");
+                                star.classList.add("mask");
+                                star.classList.add("mask-star-2");
+                                if (i >= it.difficulty) {
+                                    star.style.cssText+="--tw-bg-opacity: .2;";
+                                }
+                                rating.appendChild(star);
+                            }
+                            li.appendChild(a);
+                            a.appendChild(rating);
+                        }
+                    }
+                }
+                addMenuItemsTo(sm, menuTree);
+            }
             window.addEventListener("load", function() {
                 confettiState = localStorage.getItem('confettiState');
                 if      (confettiState == '1') document.getElementById("confetti-checkbox").checked = false;
                 else if (confettiState == '2') document.getElementById("confetti-checkbox").indeterminate = true;
                 else if (confettiState == '3') document.getElementById("confetti-checkbox").checked = true;
+                makeSidebarMenu();
                 loadSteps();
                 ggbApplet.inject('ggb-element');
             });
@@ -321,10 +404,9 @@
 </div>
 <div class="drawer-side">
 <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-    <ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
+    <ul class="menu menu-sm w-80 min-h-full bg-base-200 text-base-content" id="sidebar-menu">
         <!-- Sidebar content here -->
-        <li><a>Sidebar Item 1</a></li>
-        <li><a>Sidebar Item 2</a></li>
+        <div class="flex-1"><div style="position:absolute;bottom:0;padding:1rem;">Powered by <a href="https://www.geogebra.org/">GeoGebra®</a></div></div>
     </ul>
 </div>
 </div>
