@@ -308,8 +308,8 @@
                 div = document.createElement('div');
                 div.innerHTML = (ifrm.contentDocument.body||ifrm.contentDocument).innerHTML;
                 for (var i = 0; i < div.children.length; i++) {
-                    insertChildAtIndex(sc, div.children[i], i);
-                    loadedSteps.push(div.children[i]);
+                    insertChildAtIndex(sc, div.children[0], i);
+                    loadedSteps.push(div.children[0]);
                 }
                 ifrm.remove();
                 stepsOnLoad();
