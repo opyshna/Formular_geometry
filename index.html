@@ -78,6 +78,9 @@
         #task-container > div:not(.join, #solution-steps), #solution-steps > div {
             padding: 10px;
         }
+        #ss-control {
+            padding-left: 10px;
+        }
         #task-container > div > b {
             margin-right: 5px;
         }
@@ -153,7 +156,7 @@
                 <div objs="ABC">4. $ΔABC$</div>
                 </div>-->
 
-                <div class="join">
+                <div class="join" id="ss-control">
                     <buttton onclick="prevGG()" class="btn join-item"><div class="ssLoading" style="position: relative;"><span style="visibility: hidden;">PREV</span><span class="loading loading-spinner loading-xs"></span></div></buttton>
                     <buttton onclick="nextGG()" class="btn join-item"><div class="ssLoading" style="position: relative;"><span style="visibility: hidden;" id="confetti-source">NEXT</span><span class="loading loading-spinner loading-xs"></span></div></buttton>
                     <button class="btn btn-square join-item" onmousedown="ssMouseDown(event.clientY);event.preventDefault();" ontouchstart="ssMouseDown(event.touches[0].clientY);event.preventDefault();" style="touch-action:none;">
@@ -278,14 +281,34 @@
             window.addEventListener("touchmove", (event)=>ssMouseMove(event.touches[0].clientY, true));
             window.addEventListener("touchend", ssMouseUp);
             window.addEventListener("touchcancel", ssMouseUp);
+            loadedSteps = null;
             function loadSteps() {
-                sc = document.getElementById("task-container");
-                ifrm = document.createElement("iframe");
-                ifrm.setAttribute("onload", "this.insertAdjacentHTML('afterend', (this.contentDocument.body||this.contentDocument).innerHTML);this.remove();stepsOnLoad();");
                 url = new URL(window.location.href);
-                ifrm.setAttribute("src", url.searchParams.get("task"));
-                ifrm.style.display = "none";
-                sc.insertBefore(ifrm, sc.firstChild);
+                task = url.searchParams.get("task");
+                sc = document.getElementById("task-container");
+                if (task) {
+                    ifrm = document.createElement("iframe");
+                    ifrm.setAttribute("onload", "stepsOnLoadIfrm(this);");
+                    ifrm.setAttribute("src", task);
+                    ifrm.style.display = "none";
+                    sc.insertBefore(ifrm, sc.firstChild);
+                } else {
+                    loadedSteps = document.createElement("div");
+                    loadedSteps.innerHTML = "Please select a task in the sidebar";
+                    sc.insertBefore(loadedSteps, sc.firstChild);
+                    document.getElementById("ss-control").style.visibility="hidden";
+                }
+            }
+            function stepsOnLoadIfrm(ifrm) {
+                if (loadedSteps) {
+                    loadedSteps.remove();
+                    if (GGapp) GGapp.reset();
+                }
+                loadedSteps = document.createDocumentFragment();
+                loadedSteps.insertAdjacentHTML('afterbegin', (ifrm.contentDocument.body||ifrm.contentDocument).innerHTML);
+                insertChildAtIndex(ifrm.parent, loadedSteps, 0);
+                ifrm.remove();
+                stepsOnLoad();
             }
             function stepsOnLoad() {
                 MathJax.Hub.Typeset()
