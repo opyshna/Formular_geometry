@@ -306,7 +306,7 @@
                 }
                 loadedSteps = document.createDocumentFragment();
                 loadedSteps.innerHTML = (ifrm.contentDocument.body||ifrm.contentDocument).innerHTML;
-                insertChildAtIndex(ifrm.parent, loadedSteps, 0);
+                insertChildAtIndex(ifrm.parentElement, loadedSteps, 0);
                 ifrm.remove();
                 stepsOnLoad();
             }
