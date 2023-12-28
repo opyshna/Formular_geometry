@@ -92,7 +92,7 @@
         };
         let ABH = {
             name: "ABH",
-            link: "/?task=ABH",
+            task: "ABH",
             difficulty: 1,
             image: "/ABH.svg"
         };
@@ -356,7 +356,12 @@
                         } else {
                             a = document.createElement("a");
                             a.innerHTML = it.name;
-                            a.href = it.link;
+                            //a.addEventListener("click", ()=>{
+                                url = new URL(window.location.href);
+                                url.searchParams.set("task", it.task);
+                            //    window.location.href = url.href;
+                            //});
+                            a.href = url.href;
                             a.style.position="relative";
                             rating = document.createElement("div");
                             rating.classList.add("sidebar-menu-rating");
