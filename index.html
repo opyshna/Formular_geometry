@@ -138,17 +138,17 @@
         <div class="half_width explanation">
             <div class="flex-col" id="task-container">
 
-                <!--<div><b>Task:</b>reconstruct the triangle by points A, B and H</div>
+                <!--<div><b>Task:</b>reconstruct the triangle by points $A$, $B$ and $H$</div>
                 <div class="flex"><b>Given:</b><div class="flex-col">
                 <div>$A,B$ - two vertices of the triangle</div>
                 <div>$H$ - point of intersection of heights of the triangle</div>
                 </div></div>
                 <div class="flex-col" id="solution-steps" task-name="ABH" initial-command=
                 "A=(2,1)\nB=(0,-1)\nH=(0,0)
-                AH=Ray(A,H)\nBH=Ray(B,H)
-                AB_1l=PerpendicularLine(A,BH)\nB_1=Intersect(AB_1l,BH)\nSetVisibleInView(AB_1l,1,False)\nAB_1=Ray(A,B_1)
-                BA_1l=PerpendicularLine(B,AH)\nA_1=Intersect(BA_1l,AH)\nSetVisibleInView(BA_1l,1,False)\nBA_1=Ray(B,A_1)
-                C=Intersect(AB_1l,BA_1l)
+                AH=Line(A,H)\nBH=Line(B,H)
+                AB_1=PerpendicularLine(A,BH)\nB_1=Intersect(AB_1,BH)
+                BA_1=PerpendicularLine(B,AH)\nA_1=Intersect(BA_1,AH)
+                C=Intersect(AB_1,BA_1)
                 ABC=Polygon(A,B,C)">
                 <div objs="AH BH">1. $AH$ and $BH$</div>
                 <div objs="AB_1 BA_1 A_1 B_1">2. $AB_1⊥BH$ and $BA_1⊥AH$</div>
@@ -302,6 +302,7 @@
                     loadedSteps.innerHTML = "Please select a task in the sidebar";
                     sc.insertBefore(loadedSteps, sc.firstChild);
                     document.getElementById("ss-control").style.visibility="hidden";
+                    document.getElementById("my-drawer").checked=true;
                 }
             }
             function stepsOnLoadIfrm(ifrm) {
@@ -332,7 +333,10 @@
                 problemOnLoad();
             }
             function appletOnClear() {
-                if (GGapp && stepsLoaded) GGapp.evalCommand(document.getElementById("solution-steps").getAttribute("initial-command").replaceAll("\\n", "\n"));
+                if (GGapp && stepsLoaded) {
+                    GGapp.reset();
+                    appletOnLoad(GGapp);
+                }
             }
             function problemOnLoad() {
                 if (!stepsLoaded || !GGapp) return;
