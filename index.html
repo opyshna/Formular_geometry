@@ -84,6 +84,15 @@
         #task-container > div > b {
             margin-right: 5px;
         }
+        #editGGBbtn {
+            top: 1px;
+            right: calc(3px + 3rem);
+            transition: 0.3s cubic-bezier(0.2, 1, 0.1, 1);
+        }
+        #editGGBbtn.btn-active {
+            right: 1px;
+            z-index: 101;
+        }
     </style>
     <script>
         {
@@ -112,7 +121,7 @@
 <div class="drawer-content flex flex-col flex-1">
     <div class="navbar bg-base-100" id="navbar">
         <div class="flex-none">
-            <label for="my-drawer" class="btn btn-square btn-ghost drawer-button">
+            <label for="my-drawer" class="btn btn-square btn-ghost drawer-button" onclick="toggleGGTools(1);">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </label>
         </div>
@@ -170,10 +179,10 @@
             <div style="position:relative;width:fit-content;height:fit-content;">
                 <div id="ggb-element"></div>
                 <span class="loading loading-spinner loading-lg" id="ggb-loading"></span>
-                <button class="btn btn-square" onclick="appletOnClear()" fill="none" style="position:absolute;top:1px;right:1px">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12h4l-2 -3.46zh2v-3 M18 12h4l-2 3.46zh2v3 M4 12A8 8 0 0 0 17.66 17.66 M20 12A8 8 0 0 0 6.34 6.34"></path></svg>
+                <button class="btn btn-square" onclick="appletOnClear();this.children[0].style.transform+='rotate(180deg)'" fill="none" style="position:absolute;top:1px;right:1px">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current" style="transition: .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12h4l-2 -3.46zh2v-3 M18 12h4l-2 3.46zh2v3 M4 12A8 8 0 0 0 17.66 17.66 M20 12A8 8 0 0 0 6.34 6.34"></path></svg>
                 </button>
-                <button class="btn btn-square" id="editGGBbtn" onclick="toggleGGTools(this)" fill="none" style="position:absolute;top:1px;right:calc(3px + 3rem);">
+                <button class="btn btn-square" id="editGGBbtn" onclick="toggleGGTools()" fill="none" style="position:absolute;">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 22l 4 -1 l 12 -12 l -3 -3 l -12 12z m18 -15l2 -2l-3 -3l-2 2z"></path></svg>
                 </button>
             </div>
@@ -339,10 +348,11 @@
                 GGapp.evalCommand(ss.getAttribute("initial-command").replaceAll("\\n", "\n"));
                 for (var i = cc; i < ss.children.length; i++) for (obj of ss.children[i].getAttribute("objs").split(" ")) GGapp.setVisible(obj, false);
             }
-            function toggleGGTools() {
+            function toggleGGTools(forceOff) {
                 if (!GGapp) return;
-                cl = document.getElementById("editGGBbtn").classList;
-                editOn = cl.toggle("btn-active");
+                btn = document.getElementById("editGGBbtn");
+                editOn = btn.classList.toggle("btn-active");
+                if (editOn && forceOff) editOn = btn.classList.toggle("btn-active");
                 GGapp.showToolBar(editOn);
                 GGapp.enableRightClick(editOn);
                 if (!editOn) GGapp.setMode(0);
