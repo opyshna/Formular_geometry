@@ -1,0 +1,16 @@
+<div             ><b>Task:</b>reconstruct the triangle by points $A$, $B$ and $M_A$</div>
+<div class="flex"><b>Given:</b><div class="flex-col">
+  <div>$A$, $B$ - two vertices of the triangle</div>
+  <div>$M_A$ - base of the median of the triangle from $A$</div>
+</div></div>
+<div class="flex-col" id="solution-steps" task-name="ABH" initial-command=
+    "A=(2,1)\nB=(0,-1)\nM_A=(0,0)
+    BM_A=Ray(B,M_A)
+    c=Circle(M_A,B)
+    C=2M_A-B
+    ABC=Polygon(A,B,C)">
+  <div objs="BM_A">1. $BM_A$</div>
+  <div objs="c">2. $||M_AC||=||M_AB||$</div>
+  <div objs="C">3. $C=BM_A⋂C$</div>
+  <div objs="ABC">4. $ΔABC$</div>
+</div>
