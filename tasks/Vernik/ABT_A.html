@@ -1,0 +1,33 @@
+<div             ><b>Task:</b>reconstruct the triangle by points $A$, $B$ and $T_A$</div>
+<div class="flex"><b>Given:</b><div class="flex-col">
+  <div>$A$, $B$ - two vertices of the triangle</div>
+  <div>$T_A$ - point where the <a href="https://en.wikipedia.org/wiki/Incircle_and_excircles">excirle</a> opposite to $A$ touches $BC$</div>
+</div></div>
+<div class="flex-col" id="solution-steps" task-name="ABT_A" initial-command=
+    "A=(2,1)\nB=(0,-1)\nT_A=(0,0)
+    AB=Ray(A,B)
+    BT_A=Ray(B,T_A)
+    J_A=Intersect(AngleBisector(T_A,B,2B-A),PerpendicularLine(T_A,BT_A))
+    BJ_A=Ray(B,J_A)
+    T_AJ_A=Ray(T_A,J_A)
+    j_a=Circle(J_A,T_A)
+    D=Midpoint(A,J_A)
+    aja=Cross(A-B, B-T_A)>0
+    aj_a=If(aja,Semicircle(A,J_A),Semicircle(J_A,A))
+    E=If(aja,Intersect(Semicircle(A,J_A),j_a),Intersect(Semicircle(J_A,A),j_a))
+    AC=Ray(A,E)
+    C=Intersect(AC,BT_A)
+    ABC=Polygon(A,B,C)">
+  <div objs="AB BT_A" >1. $AB$ and $BT_A$</div>
+  <div objs=""        >2. $J_A$</div>
+  <div objs="BJ_A"    >&emsp;a. $∠T_ABJ_A=∠J_AB(AB)$</div>
+  <div objs="T_AJ_A"  >&emsp;b. $T_AJ_A⊥BT_A$</div>
+  <div objs="J_A"     >&emsp;c. $J_A=BJ_A⋂T_AJ_A$</div>
+  <div objs=""        >3. $C∈AE⊥J_AE$</div>
+  <div objs="D aj_a"  >&emsp;a. $||DE||=||DA||=||DJ_A||$</div>
+  <div objs="j_a"     >&emsp;b. $||J_AE||=||J_AD||$</div>
+  <div objs="E"       >&emsp;c. $E=DE⋂J_AE$</div>
+  <div objs="AC"      >&emsp;d. $AE$</div>
+  <div objs="C"       >&emsp;e. $C=AE⋂BT_A$</div>
+  <div objs="ABC"     >4. $ΔABC$</div>
+</div>
