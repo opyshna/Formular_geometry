@@ -93,6 +93,14 @@
             right: 1px;
             z-index: 101;
         }
+        div > a {
+            text-decoration: none;
+            color: #3366cc;
+            background: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
     <script>
         {
@@ -102,6 +110,10 @@
             difficulty: -1,
             image: ""
         };
+        /*  TODO: test out
+          TODO: Vernik 4 10 11 13 14 15 16 17 18 19 20 23 24 25 27 28 29 33 34 36 37 39 40 41 43 44 47 48 49 51 53 54 55 57 58 60 61 62 63 65 66 69 70 75 76 82 83 84 85 86 87 92 93 94 96 97 101 103 104 105 112 116 117 124 125 126 131 133 139
+          77? 78? 113? 118? 119? 123? 127? 128? 132? 134? 135? 137?
+        */
         let ABM_A = { // Vernik 2
             name: "ABM_A",
             task: "tasks/Vernik/ABM_A",
@@ -114,9 +126,15 @@
             difficulty: 1,
             image: ""
         };
-        var menuList = [ABM_A, ABH];
+        let ABT_A = { // Vernik 8
+            name: "ABT_A",
+            task: "tasks/Vernik/ABT_A",
+            difficulty: 1,
+            image: ""
+        };
+        //var menuList = [ABM_A, ABH];
         var menuTree = [
-            {catName:"Triangle reconstruction", items:[ABM_A, ABH]}
+            {catName:"Triangle reconstruction", items:[ABM_A, ABH, ABT_A]}
         ];
         }
     </script>
@@ -149,26 +167,13 @@
         </div>
     </div>
 
+<!-- <div i="######################" id="dev_task_inline"></div> -->
+
     <div class="full_width">
         <div class="half_width explanation">
             <div class="flex-col" id="task-container">
 
-                <!--<div><b>Task:</b>reconstruct the triangle by points $A$, $B$ and $M_A$</div>
-                <div class="flex"><b>Given:</b><div class="flex-col">
-                <div>$A$, $B$ - two vertices of the triangle</div>
-                <div>$M_A$ - base of the median of the triangle from $A$</div>
-                </div></div>
-                <div class="flex-col" id="solution-steps" task-name="ABH" initial-command=
-                "A=(2,1)\nB=(0,-1)\nM_A=(0,0)
-                BM_A=Ray(B,M_A)
-                c=Circle(M_A,B)
-                C=2M_A-B
-                ABC=Polygon(A,B,C)">
-                <div objs="BM_A">1. $BM_A$</div>
-                <div objs="c">2. $||M_AC||=||M_AB||$</div>
-                <div objs="C">3. $C=BM_A⋂C$</div>
-                <div objs="ABC">4. $ΔABC$</div>
-                </div>-->
+
 
                 <div class="join" id="ss-control">
                     <buttton onclick="prevGG()" class="btn join-item"><div class="ssLoading" style="position: relative;"><span style="visibility: hidden;">PREV</span><span class="loading loading-spinner loading-xs"></span></div></buttton>
@@ -210,7 +215,7 @@
             cc = 0;
             animSpeed = 200; // px/s
             function getStepsHeights() {
-                heights = [0];
+                let heights = [0];
                 steps = document.getElementById("solution-steps").children;
                 for (var i = 0; i < steps.length; i++) heights.push(steps[i].offsetHeight + heights[i]);
                 return heights;
@@ -247,7 +252,11 @@
                 h2 = getStepsHeights()[cc];
                 ss.style.maxHeight = h2 + "px";
             }
-            ssMove = {}
+            var ssMove = {
+                heights: [0],
+                startY: 0,
+                moving: false
+            }
             function ssMouseDown(y) {
                 if (!stepsLoaded) return;
                 ssMove.heights = getStepsHeights();
@@ -271,7 +280,7 @@
                 ss.style.maxHeight = h1 + "px";
                 cc1 = 0;
                 for (var i = 0; i < ss.children.length; i++) {
-                    mid = (heights[i]+heights[i+1])/2;
+                    mid = (ssMove.heights[i]+ssMove.heights[i+1])/2;
                     shouldShow = h1>mid;
                     if (GGapp) for (obj of ss.children[i].getAttribute("objs").split(" ")) GGapp.setVisible(obj, shouldShow);
                     if (shouldShow) cc1 = i+1;
@@ -306,7 +315,7 @@
                     ifrm.setAttribute("src", task);
                     ifrm.style.display = "none";
                     sc.insertBefore(ifrm, sc.firstChild);
-                } else {
+                } else if (!document.getElementById("dev_task_inline")) {
                     loadedSteps = document.createElement("div");
                     loadedSteps.innerHTML = "Please select a task in the sidebar";
                     sc.insertBefore(loadedSteps, sc.firstChild);
@@ -476,3 +485,4 @@
 </div>
 </body>
 </html>
+<!-- kate: replace-tabs true; tab-width 2; indent-width 2; -->
