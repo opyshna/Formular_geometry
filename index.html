@@ -121,7 +121,7 @@
       </label>
     </div>
     <div class="flex-1">
-      <a class="btn btn-ghost text-xl no-animation" id="menuTitle" href="/">Formular Geometry</a>
+      <a class="btn btn-ghost text-xl no-animation" id="menuTitle" href="/Formular_geometry">Formular Geometry</a>
     </div>
     <div class="flex-none">
       <div class="form-control">
@@ -287,7 +287,7 @@
         stepsOnLoad();
       }
       function stepsOnLoad() {
-        MathJax.Hub.Typeset()
+        //MathJax.Hub.Typeset()
         let title = document.getElementById("title");
         title.innerHTML = document.getElementById("solution-steps").getAttribute("task-name") + " - " + title.innerHTML;
         for (el of document.getElementsByClassName("ssLoading")) {
