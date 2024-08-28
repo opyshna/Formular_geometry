@@ -417,7 +417,7 @@
               addMenuItemsTo(ul, it.items);
             } else {
               let a = document.createElement("a");
-              a.innerHTML = it.name;
+              a.innerHTML = "<div class=\"flex\">"+it.name.replace(/_(.)/i, "<div style=\"transform:scale(0.7)translate(0,40%);text-decoration:initial\">$1</div>")+"</div>";
               //a.addEventListener("click", ()=>{
                 let url = new URL(window.location.href);
                 url.searchParams.set("task", it.task);
