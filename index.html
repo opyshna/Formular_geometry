@@ -78,7 +78,7 @@
   <script>{
     var defaultMenuItem = {
       name: "_error_",
-      link: "",
+      link: "tasks/tutorial",
       difficulty: -1,
       image: ""
     };
@@ -121,7 +121,7 @@
       </label>
     </div>
     <div class="flex-1">
-      <a class="btn btn-ghost text-xl no-animation" id="menuTitle">Formular Geometry</a>
+      <a class="btn btn-ghost text-xl no-animation" id="menuTitle" href="/">Formular Geometry</a>
     </div>
     <div class="flex-none">
       <div class="form-control">
@@ -259,20 +259,14 @@
       loadedSteps = [];
       function loadSteps() {
         let url = new URL(window.location.href);
-        let task = url.searchParams.get("task");
+        let task = url.searchParams.get("task") || defaultMenuItem.link;
         let sc = document.getElementById("task-container");
-        if (task) {
+        if (!document.getElementById("dev_task_inline")) {
           let ifrm = document.createElement("iframe");
           ifrm.setAttribute("onload", "stepsOnLoadIfrm(this);");
           ifrm.setAttribute("src", task);
           ifrm.style.display = "none";
           sc.insertBefore(ifrm, sc.firstChild);
-        } else if (!document.getElementById("dev_task_inline")) {
-          loadedSteps = document.createElement("div");
-          loadedSteps.innerHTML = "Please select a task in the sidebar";
-          sc.insertBefore(loadedSteps, sc.firstChild);
-          document.getElementById("ss-control").style.visibility="hidden";
-          document.getElementById("my-drawer").checked=true;
         }
       }
       function stepsOnLoadIfrm(ifrm) {
