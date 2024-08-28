@@ -5,13 +5,20 @@
 </div></div>
 <div class="flex-col" id="solution-steps" task-name="ABH" initial-command=
     "A=(2,1)\nB=(0,-1)\nH=(0,0)
-    AH=Line(A,H)\nBH=Line(B,H)
-    AB_1=PerpendicularLine(A,BH)\nB_1=Intersect(AB_1,BH)
-    BA_1=PerpendicularLine(B,AH)\nA_1=Intersect(BA_1,AH)
-    C=Intersect(AB_1,BA_1)
-  ABC=Polygon(A,B,C)">
-  <div objs="AH BH"             >1. $AH$ and $BH$</div>
-  <div objs="AB_1 BA_1 A_1 B_1" >2. $AB_1⊥BH$ and $BA_1⊥AH$</div>
-  <div objs="C"                 >3. $C=AB_1⋂BA_1$</div>
-  <div objs="ABC"               >4. $ΔABC$</div>
+    AH=If(Dot(H-A,B-A)<0,Ray(H,A),Dot(A-H,B-H)<0,Ray(A,H))
+    AH0=If(Dot(H-A,B-A)>0&&Dot(A-H,B-H)>0,Segment(A,H))
+    BH=If(Dot(H-B,A-B)<0,Ray(H,B),Dot(B-H,A-H)<0,Ray(B,H))
+    BH0=If(Dot(H-B,A-B)>0&&Dot(B-H,A-H)>0,Segment(B,H))
+    B_1=Intersect(PerpendicularLine(A,Line(B,H)),Line(B,H))
+    AB_1=If(Dot(H-A,B-A)<0,Ray(B_1,A),Dot(A-H,B-H)<0||Dot(H-B,A-B)<0,Ray(A,B_1))
+    AB_10=If(Dot(H-A,B-A)>0&&Dot(A-H,B-H)>0,Segment(A,B_1))
+    A_1=Intersect(PerpendicularLine(B,Line(A,H)),Line(A,H))
+    BA_1=If(Dot(H-B,A-B)<0,Ray(A_1,B),Dot(B-H,A-H)<0||Dot(H-A,B-A)<0,Ray(B,A_1))
+    BA_10=If(Dot(H-B,A-B)>0&&Dot(B-H,A-H)>0,Segment(B,A_1))
+    C=Intersect(Line(A,B_1),Line(B,A_1))
+    ABC=Polygon(A,B,C)">
+  <div objs="AH BH AH0 BH0"                 >1. $AH$ and $BH$</div>
+  <div objs="AB_1 AB_10 BA_1 BA_10 A_1 B_1" >2. $AB_1⊥BH$ and $BA_1⊥AH$</div>
+  <div objs="C"                             >3. $C=AB_1⋂BA_1$</div>
+  <div objs="ABC"                           >4. $ΔABC$</div>
 </div>
